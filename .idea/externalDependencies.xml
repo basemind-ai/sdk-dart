@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalDependencies">
+    <plugin id="Dart" />
+    <plugin id="String Manipulation" />
+    <plugin id="intellij.prettierJS" />
+    <plugin id="lechuck.intellij-plugin.task" />
+    <plugin id="org.jetbrains.plugins.github" />
+    <plugin id="org.jetbrains.plugins.yaml" />
+  </component>
+</project>

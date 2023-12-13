@@ -1,0 +1,24 @@
+version: '3'
+
+tasks:
+    setup:
+        desc: Setup the Project
+        cmds:
+            - command -v flutter &> /dev/null && flutter upgrade
+            - command -v dart &> /dev/null || brew install dart
+            - command -v pre-commit &> /dev/null || brew install pre-commit
+            - pre-commit install && pre-commit install --hook-type commit-msg && pre-commit install-hooks
+            - dart pub get
+    update:
+        desc: Update Components and Dependencies
+        cmds:
+            - command -v flutter &> /dev/null && flutter upgrade
+            - dart pub upgrade
+            - pre-commit autoupdate
+    lint:
+        desc: Lint the project
+        cmds:
+            - dart format write
+            - dart fix --apply
+            - pre-commit run --show-diff-on-failure --color=always --all-files
+            - dart analyze

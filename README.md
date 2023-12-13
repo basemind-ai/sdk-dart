@@ -1,2 +1,3 @@
 # sdk-dart
-The BaseMind.AI Dart SDK 
+
+The BaseMind.AI Dart SDK

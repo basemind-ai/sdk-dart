@@ -1,0 +1,18 @@
+name: basemind
+description: The dart client for the BaseMind.AI platform
+version: 1.0.0
+repository: https://github.com/basemind-ai/sdk-dart
+topics:
+    - basemind
+    - ai
+    - grpc
+
+environment:
+    sdk: ^3.2.3
+
+dependencies:
+    # path: ^1.8.0
+
+dev_dependencies:
+    lints: ^3.0.0
+    test: ^1.24.0
