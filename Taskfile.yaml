@@ -33,3 +33,8 @@ tasks:
             - rm -rf lib/src/generated || true
             - mv tmp/proto/gateway/v1 lib/src/generated
             - rm -rf tmp
+    coverage:
+        desc: Generate a coverage report
+        cmds:
+            - dart pub global activate coverage
+            - dart pub global run coverage:test_with_coverage
