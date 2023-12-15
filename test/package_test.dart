@@ -1,4 +1,4 @@
-import 'package:basemind/client.dart';
+import 'package:basemind/src/client.dart';
 import 'package:test/test.dart';
 
 void main() {
