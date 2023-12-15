@@ -4,6 +4,7 @@ tasks:
     setup:
         desc: Setup the Project
         cmds:
+            - brew update && brew upgrade
             - command -v flutter &> /dev/null && flutter upgrade
             - command -v dart &> /dev/null || brew install dart
             - command -v protoc &> /dev/null || brew install protobuf
@@ -12,6 +13,7 @@ tasks:
     update:
         desc: Update Components and Dependencies
         cmds:
+            - brew update && brew upgrade
             - command -v flutter &> /dev/null && flutter upgrade
             - dart pub upgrade
             - pre-commit autoupdate
