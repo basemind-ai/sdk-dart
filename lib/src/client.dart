@@ -1,11 +1,16 @@
 import 'package:grpc/grpc.dart';
 import 'package:logging/logging.dart';
 
-import "generated/gateway.pbgrpc.dart";
 import "exceptions.dart";
+import "generated/gateway.pbgrpc.dart";
+
+const _missingTemplateVariableMessage =
+    "a value for an expected template variable was not passed to the request";
+const _apiGatewayErrorMessage = "the API gateway returned an error";
 
 const defaultApiGatewayAddress = "gateway.basemind.ai";
 const defaultApiGatewayPort = 443;
+
 final defaultLogger = Logger("BaseMindClient");
 
 /// Options for instantiating a [BaseMindClient].
@@ -35,15 +40,15 @@ class ClientOptions {
 }
 
 class BaseMindClient {
-  final String _apiToken
+  final String _apiToken;
   final String? _promptConfigId;
   final APIGatewayServiceClient _stub;
   final ClientChannel _channel;
   final bool _isDebug;
   final Logger _logger;
 
-  BaseMindClient._internal(
-      this._apiToken, this._promptConfigId, this._stub, this._channel, this._isDebug, this._logger);
+  BaseMindClient._internal(this._apiToken, this._promptConfigId, this._stub,
+      this._channel, this._isDebug, this._logger);
 
   /// Instantiates and returns [BaseMindClient] instance.
   ///
@@ -54,8 +59,7 @@ class BaseMindClient {
     String apiToken,
     String? promptConfigId,
     ClientOptions? options,
-      ) {
-
+  ) {
     if (apiToken.isEmpty) {
       throw MissingAPIKeyException("apiToken must not be empty");
     }
@@ -77,7 +81,19 @@ class BaseMindClient {
 
     var stub = APIGatewayServiceClient(channel);
 
-    return BaseMindClient._internal(apiToken, promptConfigId, stub, channel, options.debug, logger);
+    return BaseMindClient._internal(
+        apiToken, promptConfigId, stub, channel, options.debug, logger);
+  }
+
+  _createPromptRequest(Map<String, String> templateVariables) {
+    var request = PromptRequest();
+    request.templateVariables.addAll(templateVariables);
+
+    if (_promptConfigId != null) {
+      request.promptConfigId = _promptConfigId;
+    }
+
+    return request;
   }
 
   /// Closes the gRPC channel and cancels pending RPC calls.
@@ -94,10 +110,24 @@ class BaseMindClient {
   /// throws [MissingPromptVariableException] if a template variable is missing.
   /// throws an [APIGatewayException] if the API gateway returns an error.
   Future<PromptResponse> requestPrompt(
-      Map<String, String> templateVariables) async {
+    Map<String, String> templateVariables,
+  ) async {
     var request = PromptRequest();
     request.templateVariables.addAll(templateVariables);
-    return await _stub.requestPrompt(request);
+    try {
+      return await _stub.requestPrompt(
+        request,
+        options: CallOptions(metadata: {
+          "authorization": "Bearer $_apiToken",
+        }),
+      );
+    } on GrpcError catch (e) {
+      if (e.code == StatusCode.invalidArgument) {
+        throw MissingPromptVariableException(
+            e.message ?? _missingTemplateVariableMessage);
+      }
+      throw APIGatewayException(e.message ?? _apiGatewayErrorMessage);
+    }
   }
 
   /// Requests an AI streaming prompt. The prompt is streamed from the API gateway in chunks.
@@ -107,8 +137,22 @@ class BaseMindClient {
   /// throws an [APIGatewayException] if the API gateway returns an error.
   Stream<StreamingPromptResponse> requestStreamingPrompt(
       Map<String, String> templateVariables) {
-    var request = PromptRequest();
-    request.templateVariables.addAll(templateVariables);
-    return _stub.requestStreamingPrompt(request);
+    var request = _createPromptRequest(templateVariables);
+    try {
+      return _stub.requestStreamingPrompt(
+        request,
+        options: CallOptions(
+          metadata: {
+            "authorization": "Bearer $_apiToken",
+          },
+        ),
+      );
+    } on GrpcError catch (e) {
+      if (e.code == StatusCode.invalidArgument) {
+        throw MissingPromptVariableException(
+            e.message ?? _missingTemplateVariableMessage);
+      }
+      throw APIGatewayException(e.message ?? _apiGatewayErrorMessage);
+    }
   }
 }
