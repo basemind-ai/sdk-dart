@@ -68,6 +68,10 @@ class BaseMindClient {
 
     var logger = options.logger ?? defaultLogger;
 
+    if (options.debug) {
+      logger.fine("creating client instance");
+    }
+
     var channelOptions = options.channelOptions ??
         ChannelOptions(
           credentials: ChannelCredentials.secure(),
@@ -112,16 +116,21 @@ class BaseMindClient {
   Future<PromptResponse> requestPrompt(
     Map<String, String> templateVariables,
   ) async {
-    var request = PromptRequest();
-    request.templateVariables.addAll(templateVariables);
+    if (_isDebug) {
+      _logger.fine("requesting prompt");
+    }
+
     try {
       return await _stub.requestPrompt(
-        request,
+        _createPromptRequest(templateVariables),
         options: CallOptions(metadata: {
           "authorization": "Bearer $_apiToken",
         }),
       );
     } on GrpcError catch (e) {
+      if (_isDebug) {
+        _logger.fine("exception requesting prompt: $e");
+      }
       if (e.code == StatusCode.invalidArgument) {
         throw MissingPromptVariableException(
             e.message ?? _missingTemplateVariableMessage);
@@ -136,11 +145,15 @@ class BaseMindClient {
   /// throws [MissingPromptVariableException] if a template variable is missing.
   /// throws an [APIGatewayException] if the API gateway returns an error.
   Stream<StreamingPromptResponse> requestStreamingPrompt(
-      Map<String, String> templateVariables) {
-    var request = _createPromptRequest(templateVariables);
+    Map<String, String> templateVariables,
+  ) {
+    if (_isDebug) {
+      _logger.fine("requesting streaming prompt");
+    }
+
     try {
       return _stub.requestStreamingPrompt(
-        request,
+        _createPromptRequest(templateVariables),
         options: CallOptions(
           metadata: {
             "authorization": "Bearer $_apiToken",
@@ -148,6 +161,9 @@ class BaseMindClient {
         ),
       );
     } on GrpcError catch (e) {
+      if (_isDebug) {
+        _logger.fine("exception streaming prompt: $e");
+      }
       if (e.code == StatusCode.invalidArgument) {
         throw MissingPromptVariableException(
             e.message ?? _missingTemplateVariableMessage);

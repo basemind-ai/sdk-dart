@@ -1,5 +1,1 @@
-import 'package:basemind/src/client.dart' as basemind;
-
-void main(List<String> arguments) {
-  print('Hello world: ${basemind.calculate()}!');
-}
+void main(List<String> arguments) {}
