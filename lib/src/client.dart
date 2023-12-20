@@ -2,6 +2,7 @@ import 'package:grpc/grpc.dart';
 import 'package:logging/logging.dart';
 
 import "generated/gateway.pbgrpc.dart";
+import "exceptions.dart";
 
 const defaultApiGatewayAddress = "gateway.basemind.ai";
 const defaultApiGatewayPort = 443;
@@ -34,18 +35,31 @@ class ClientOptions {
 }
 
 class BaseMindClient {
+  final String _apiToken
+  final String? _promptConfigId;
   final APIGatewayServiceClient _stub;
   final ClientChannel _channel;
   final bool _isDebug;
   final Logger _logger;
 
   BaseMindClient._internal(
-      this._stub, this._channel, this._isDebug, this._logger);
+      this._apiToken, this._promptConfigId, this._stub, this._channel, this._isDebug, this._logger);
 
   /// Instantiates and returns [BaseMindClient] instance.
   ///
-  /// Receives an optional [ClientOptions] object.
-  factory BaseMindClient(ClientOptions? options) {
+  /// Param [apiToken] is the API token to use for authentication. This parameter is required.
+  /// Param [promptConfigId] is the prompt config id to use for the prompt request. If not provided the default prompt config will be used.
+  /// Param [ClientOptions] is an optional options object.
+  factory BaseMindClient(
+    String apiToken,
+    String? promptConfigId,
+    ClientOptions? options,
+      ) {
+
+    if (apiToken.isEmpty) {
+      throw MissingAPIKeyException("apiToken must not be empty");
+    }
+
     options ??= ClientOptions();
 
     var logger = options.logger ?? defaultLogger;
@@ -63,7 +77,7 @@ class BaseMindClient {
 
     var stub = APIGatewayServiceClient(channel);
 
-    return BaseMindClient._internal(stub, channel, options.debug, logger);
+    return BaseMindClient._internal(apiToken, promptConfigId, stub, channel, options.debug, logger);
   }
 
   /// Closes the gRPC channel and cancels pending RPC calls.
