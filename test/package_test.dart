@@ -1,6 +1,6 @@
-import 'package:basemind/src/client.dart';
-import 'package:basemind/src/exceptions.dart';
-import 'package:basemind/src/generated/gateway.pbgrpc.dart';
+import 'package:basemind/client.dart';
+import 'package:basemind/exceptions.dart';
+import 'package:basemind/generated/gateway.pbgrpc.dart';
 import 'package:grpc/grpc.dart';
 import 'package:logging/logging.dart';
 import 'package:mockito/annotations.dart';

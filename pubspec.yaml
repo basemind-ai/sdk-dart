@@ -1,6 +1,7 @@
 name: basemind
 description: The dart client for the BaseMind.AI platform
 version: 1.0.0
+homepage: https://github.com/basemind-ai/sdk-dart
 repository: https://github.com/basemind-ai/sdk-dart
 topics:
     - basemind

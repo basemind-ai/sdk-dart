@@ -1,8 +1,8 @@
 import 'package:grpc/grpc.dart';
 import 'package:logging/logging.dart';
 
-import "exceptions.dart";
-import "generated/gateway.pbgrpc.dart";
+import 'exceptions.dart';
+import 'generated/gateway.pbgrpc.dart';
 
 const _missingTemplateVariableMessage =
     "a value for an expected template variable was not passed to the request";
