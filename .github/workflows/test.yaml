@@ -6,27 +6,23 @@ on:
     pull_request:
         branches:
             - main
-#env:
-#    DEEPSOURCE_DSN: ${{secrets.DEEPSOURCE_DSN}}
 jobs:
     test:
-        runs-on: macos-latest
-        permissions:
-            contents: read
-            pull-requests: write
+        runs-on: ubuntu-latest
         steps:
             - name: Checkout
               uses: actions/checkout@v4
               with:
                   submodules: recursive
-                  ref: ${{ github.event.pull_request.head.sha }}
             - name: Setup Dart
               uses: dart-lang/setup-dart@v1
-            - name: Enable Coverage
-              run: dart pub global activate coverage
-            #            - name: Download the DeepSource CLI
-            #              run: curl https://deepsource.io/cli | sh
-            - name: Run tests with Coverage
-              run: dart pub global run coverage:test_with_coverage --package .
-#            - name: Upload Coverage Report
-#              run: ./bin/deepsource report --analyzer test-coverage --key dart --value-file ./coverage/lcov.info
+            - name: Load Cached Dart Dependencies
+              id: cached-dart-dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ~/.dart_tool/
+                  key: dart-3${{ hashFiles('pubspec.lock') }}
+            - name: Install Dependencies
+              run: dart pub get
+            - name: Run tests
+              run: dart test
