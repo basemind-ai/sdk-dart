@@ -89,9 +89,12 @@ class BaseMindClient {
         apiToken, promptConfigId, stub, channel, options.debug, logger);
   }
 
-  _createPromptRequest(Map<String, String> templateVariables) {
+  _createPromptRequest(Map<String, String>? templateVariables) {
     var request = PromptRequest();
-    request.templateVariables.addAll(templateVariables);
+
+    if (templateVariables != null) {
+      request.templateVariables.addAll(templateVariables);
+    }
 
     if (_promptConfigId != null) {
       request.promptConfigId = _promptConfigId;
@@ -114,7 +117,7 @@ class BaseMindClient {
   /// throws [MissingPromptVariableException] if a template variable is missing.
   /// throws an [APIGatewayException] if the API gateway returns an error.
   Future<PromptResponse> requestPrompt(
-    Map<String, String> templateVariables,
+    Map<String, String>? templateVariables,
   ) async {
     if (_isDebug) {
       _logger.fine("requesting prompt");
@@ -145,22 +148,22 @@ class BaseMindClient {
   /// throws [MissingPromptVariableException] if a template variable is missing.
   /// throws an [APIGatewayException] if the API gateway returns an error.
   Stream<StreamingPromptResponse> requestStreamingPrompt(
-    Map<String, String> templateVariables,
+    Map<String, String>? templateVariables,
   ) {
     if (_isDebug) {
       _logger.fine("requesting streaming prompt");
     }
 
-    try {
-      return _stub.requestStreamingPrompt(
-        _createPromptRequest(templateVariables),
-        options: CallOptions(
-          metadata: {
-            "authorization": "Bearer $_apiToken",
-          },
-        ),
-      );
-    } on GrpcError catch (e) {
+    final stream = _stub.requestStreamingPrompt(
+      _createPromptRequest(templateVariables),
+      options: CallOptions(
+        metadata: {
+          "authorization": "Bearer $_apiToken",
+        },
+      ),
+    );
+
+    return stream.handleError((e) {
       if (_isDebug) {
         _logger.fine("exception streaming prompt: $e");
       }
@@ -169,6 +172,6 @@ class BaseMindClient {
             e.message ?? _missingTemplateVariableMessage);
       }
       throw APIGatewayException(e.message ?? _apiGatewayErrorMessage);
-    }
+    });
   }
 }
