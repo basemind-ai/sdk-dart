@@ -22,7 +22,9 @@ Before using the client you have to initialize it. The init function requires an
 BaseMind platform (visit https://basemind.ai):
 
 ```dart
-// TODO
+import 'package:basemind/client.dart';
+
+final client = BaseMindClient('<API_KEY>');
 ```
 
 Once the client is initialized, you can use it to interact with the AI model(s) you configured in the BaseMind dashboard.
@@ -33,7 +35,14 @@ You can request an LLM prompt using the `requestPrompt` method, which expects a 
 correlating with any template variables defined in the dashboard (if any):
 
 ```dart
-// TODO
+import 'package:basemind/client.dart';
+
+final client = BaseMindClient('<API_KEY>');
+
+Future<String> handlePromptRequest(String userInput) async {
+  final response = await client.requestPrompt({'userInput': userInput});
+  return response.content;
+}
 ```
 
 ### Prompt Streaming
@@ -41,7 +50,36 @@ correlating with any template variables defined in the dashboard (if any):
 You can also stream a prompt response using the `requestStream` method:
 
 ```dart
-// TODO
+import 'package:basemind/client.dart';
+
+final client = BaseMindClient('<API_KEY>');
+
+handlePromptStream(String userInput) {
+  final stream = client.requestStream({'userInput': userInput});
+  stream.listen((response) {
+    print(response.content);
+  });
+}
+```
+
+And you can of course use the `requestStream` method with async/await:
+
+```dart
+import 'package:basemind/client.dart';
+
+final client = BaseMindClient('<API_KEY>');
+
+Future<List<String>> handlePromptStream(String userInput) async {
+  final stream = client.requestStream({'userInput': userInput});
+
+  var chunks = [];
+
+  await for (var response in stream) {
+    chunk.add(response.content);
+  }
+
+  return chunks;
+}
 ```
 
 Similarly to the `requestPrompt` method, `requestStream` expects a mapping of strings (if any template variables are
@@ -49,15 +87,51 @@ defined in the dashboard).
 
 ### Error Handling
 
-// TODO
+All errors thrown by the client are subclasses of BaseMindException. Errors are thrown in the following cases:
+
+1. The api key is empty (MissingAPIKeyException).
+2. A server side or connectivity error occurred (APIGatewayException)
+3. A required template variable was not provided in the mapping passed to the request (MissingPromptVariableException).
 
 ### Options
 
-// TODO
+You can pass an options object to the client:
+
+```dart
+import 'package:basemind/client.dart';
+
+final options = ClientOptions(
+   serverAddress: '127.0.0.1',
+   serverPort: 8080,
+   debug: true,
+   logger: Logger('my-logger'),
+   channelOptions:
+   ChannelOptions(credentials: ChannelCredentials.insecure()),
+);
+
+final client = BaseMindClient('<API_KEY>', null, options);
+```
+
+-   `logger`: an instance of [logging.Logger](https://pub.dev/packages/logging) to use for logging debug messages.
+-   `debug`: if set to true (default false) the client will log debug messages.
+-   `serverAddress`: the host of the BaseMind Gateway server to use.
+-   `serverPort`: the server port.
+-   `channelOptions`: gRPC channel options to use for connecting to the server.
 
 ### Passing Prompt Config ID
 
-// TODO
+The `BaseMindClient constructor also accepts an optional `promptConfigId parameter. This parameter is null by default
+which means the client will use the prompt configuration defined as default in the dashboard. You can also pass a
+specific prompt config ID to the client:
+
+```dart
+import 'package:basemind/client.dart';
+
+final client = BaseMindClient('<API_KEY>', "c5f5d1fd-d25d-4ba2-b103-8c85f48a679d");
+```
+
+`Note`: you can have multiple client instances with different `promptConfigId` values set. This allows you to use
+multiple model configurations within a single application.
 
 ## Local Development
 
