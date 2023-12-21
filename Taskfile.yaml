@@ -32,8 +32,8 @@ tasks:
             - rm -rf tmp || true
             - mkdir -p tmp
             - protoc --dart_out=grpc:tmp proto/gateway/v1/gateway.proto
-            - rm -rf lib/src/generated || true
-            - mv tmp/proto/gateway/v1 lib/src/generated
+            - rm -rf lib/src || true
+            - mv tmp/proto/gateway/v1 lib/src
             - rm -rf tmp
     coverage:
         desc: Generate a coverage report
