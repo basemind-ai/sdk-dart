@@ -27,6 +27,6 @@ jobs:
             #            - name: Download the DeepSource CLI
             #              run: curl https://deepsource.io/cli | sh
             - name: Run tests with Coverage
-              run: dart pub global run coverage:test_with_coverage
+              run: dart pub global run coverage:test_with_coverage --package .
 #            - name: Upload Coverage Report
 #              run: ./bin/deepsource report --analyzer test-coverage --key dart --value-file ./coverage/lcov.info
