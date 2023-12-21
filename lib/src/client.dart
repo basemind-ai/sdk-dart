@@ -55,11 +55,8 @@ class BaseMindClient {
   /// Param [apiToken] is the API token to use for authentication. This parameter is required.
   /// Param [promptConfigId] is the prompt config id to use for the prompt request. If not provided the default prompt config will be used.
   /// Param [ClientOptions] is an optional options object.
-  factory BaseMindClient(
-    String apiToken,
-    String? promptConfigId,
-    ClientOptions? options,
-  ) {
+  factory BaseMindClient(String apiToken,
+      [String? promptConfigId, ClientOptions? options]) {
     if (apiToken.isEmpty) {
       throw MissingAPIKeyException("apiToken must not be empty");
     }
@@ -97,7 +94,7 @@ class BaseMindClient {
     }
 
     if (_promptConfigId != null) {
-      request.promptConfigId = _promptConfigId;
+      request.promptConfigId = _promptConfigId!;
     }
 
     return request;
@@ -147,7 +144,7 @@ class BaseMindClient {
   /// Param [templateVariables] is a map of template variables to use for the prompt request.
   /// throws [MissingPromptVariableException] if a template variable is missing.
   /// throws an [APIGatewayException] if the API gateway returns an error.
-  Stream<StreamingPromptResponse> requestStreamingPrompt(
+  Stream<StreamingPromptResponse> requestStream(
     Map<String, String>? templateVariables,
   ) {
     if (_isDebug) {

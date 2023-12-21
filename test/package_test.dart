@@ -79,7 +79,23 @@ void main() {
   });
 
   group('BaseMindClient', () {
-    test('Factory constructor creates instance correctly', () {
+    test(
+        'Factory constructor creates instance correctly with 1 positional argument',
+        () {
+      final client = BaseMindClient('validToken');
+      expect(client, isNotNull);
+    });
+
+    test(
+        'Factory constructor creates instance correctly with 2 positional argument',
+        () {
+      final client = BaseMindClient('validToken', null, null);
+      expect(client, isNotNull);
+    });
+
+    test(
+        'Factory constructor creates instance correctly with 3 positional argument',
+        () {
       final client = BaseMindClient('validToken', null, null);
       expect(client, isNotNull);
     });
@@ -356,7 +372,7 @@ void main() {
     );
 
     final client = BaseMindClient('validToken', null, options);
-    var stream = client.requestStreamingPrompt({'key': 'value'});
+    var stream = client.requestStream({'key': 'value'});
 
     var chunks = [];
 
@@ -382,7 +398,7 @@ void main() {
     );
 
     final client = BaseMindClient('validToken', null, options);
-    final stream = client.requestStreamingPrompt({'key': 'value'});
+    final stream = client.requestStream({'key': 'value'});
 
     await for (var _ in stream) {
       continue;
@@ -406,7 +422,7 @@ void main() {
     );
 
     final client = BaseMindClient('validToken', "abc", options);
-    final stream = client.requestStreamingPrompt({'key': 'value'});
+    final stream = client.requestStream({'key': 'value'});
 
     await for (var _ in stream) {
       continue;
@@ -430,7 +446,7 @@ void main() {
     );
 
     final client = BaseMindClient('validToken', null, options);
-    final stream = client.requestStreamingPrompt({'key': 'value'});
+    final stream = client.requestStream({'key': 'value'});
 
     await for (var _ in stream) {
       continue;
@@ -461,7 +477,7 @@ void main() {
     final client = BaseMindClient('validToken', null, options);
 
     try {
-      final stream = client.requestStreamingPrompt({'key': 'value'});
+      final stream = client.requestStream({'key': 'value'});
       await for (var _ in stream) {
         continue;
       }
@@ -493,7 +509,7 @@ void main() {
     final client = BaseMindClient('validToken', null, options);
 
     try {
-      final stream = client.requestStreamingPrompt({'key': 'value'});
+      final stream = client.requestStream({'key': 'value'});
       await for (var _ in stream) {
         continue;
       }
@@ -528,7 +544,7 @@ void main() {
     final client = BaseMindClient('validToken', null, options);
 
     try {
-      final stream = client.requestStreamingPrompt({'key': 'value'});
+      final stream = client.requestStream({'key': 'value'});
       await for (var _ in stream) {
         continue;
       }
@@ -560,7 +576,7 @@ void main() {
     final client = BaseMindClient('validToken', null, options);
 
     try {
-      final stream = client.requestStreamingPrompt({'key': 'value'});
+      final stream = client.requestStream({'key': 'value'});
       await for (var _ in stream) {
         continue;
       }
@@ -590,7 +606,7 @@ void main() {
     );
 
     final client = BaseMindClient('validToken', null, options);
-    client.requestStreamingPrompt({'key': 'value'});
+    client.requestStream({'key': 'value'});
 
     verify(mock.fine("creating client instance")).called(1);
     verify(mock.fine("requesting streaming prompt")).called(1);
@@ -619,7 +635,7 @@ void main() {
 
     final client = BaseMindClient('validToken', null, options);
     try {
-      final stream = client.requestStreamingPrompt({'key': 'value'});
+      final stream = client.requestStream({'key': 'value'});
       await for (var _ in stream) {
         continue;
       }

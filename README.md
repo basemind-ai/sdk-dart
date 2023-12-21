@@ -54,6 +54,21 @@ import 'package:basemind/client.dart';
 
 final client = BaseMindClient('<API_KEY>');
 
+handlePromptStream(String userInput) {
+  final stream = client.requestStream({'userInput': userInput});
+  stream.listen((response) {
+    print(response.content);
+  });
+}
+```
+
+And you can of course use the `requestStream` method with async/await:
+
+```dart
+import 'package:basemind/client.dart';
+
+final client = BaseMindClient('<API_KEY>');
+
 Future<List<String>> handlePromptStream(String userInput) async {
   final stream = client.requestStream({'userInput': userInput});
 
