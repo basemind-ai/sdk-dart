@@ -6,6 +6,13 @@ on:
 
 jobs:
     publish:
+        runs-on: ubuntu-latest
         permissions:
             id-token: write
-        uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  submodules: recursive
+            - name: Publish
+              uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1

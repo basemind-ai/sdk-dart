@@ -1,5 +1,6 @@
 SECURITY.md
 Taskfile.yaml
 analysis_options.yaml
-/proto/gateway
+proto/
+/proto/gateway/
 /test
