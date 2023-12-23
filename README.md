@@ -12,6 +12,12 @@ The BaseMind.AI Dart SDK is a gRPC client library for connecting with the BaseMi
 
 Add the dependency in your application's `pubspec.yaml`:
 
+With Flutter:
+```shell
+flutter pub add basemind
+```
+
+With Dart:
 ```shell
 dart pub add basemind
 ```
