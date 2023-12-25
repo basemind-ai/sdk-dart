@@ -14,15 +14,16 @@ jobs:
               uses: actions/checkout@v4
               with:
                   submodules: recursive
-            - name: Setup Dart
-              uses: dart-lang/setup-dart@v1
+            - uses: subosito/flutter-action@v2
+              with:
+                  channel: 'stable'
             - name: Load Cached Dart Dependencies
               id: cached-dart-dependencies
               uses: actions/cache@v3
               with:
                   path: ~/.dart_tool/
-                  key: dart-3${{ hashFiles('pubspec.lock') }}
+                  key: flutter-${{ hashFiles('pubspec.lock') }}
             - name: Install Dependencies
-              run: dart pub get
+              run: flutter pub get
             - name: Run tests
-              run: dart test
+              run: flutter test
