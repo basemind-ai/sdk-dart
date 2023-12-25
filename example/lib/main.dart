@@ -2,7 +2,16 @@ import 'package:basemind/client.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+const _apiKey = ''; // <-- insert your API key here
+final _client = BaseMindClient(
+  _apiKey,
+  null,
+  ClientOptions(debug: true),
+);
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const BasemindExample());
 }
 
@@ -12,7 +21,7 @@ class BasemindExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'BaseMind Demo',
+      title: 'BaseMind Example App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurpleAccent),
         useMaterial3: true,
@@ -32,13 +41,12 @@ class AIDJPage extends StatefulWidget {
 class _AIDJPageState extends State<AIDJPage> {
   final TextEditingController inputController = TextEditingController();
   final TextEditingController responseController = TextEditingController();
-  final BaseMindClient client = BaseMindClient('YOUR_API_KEY');
 
   void _sendToBaseMind(String userInput) {
     setState(() {
       responseController.text = '';
     });
-    client.requestStream({'user_input': userInput}).listen((response) {
+    _client.requestStream({'user_input': userInput}).listen((response) {
       setState(() {
         responseController.text += response.content;
       });
