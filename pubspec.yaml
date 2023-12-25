@@ -1,5 +1,5 @@
 name: basemind
-description: The dart client for the BaseMind.AI platform
+description: 'BaseMind.AI SDK for Flutter: Streamlines AI model integration in Flutter apps. Features serverless AI, fast response with GO-based gRPC server, and a vendor-neutral approach. Includes a UI for creating and managing prompt and model configurations. Optimized for efficient and flexible AI-powered mobile experiences.'
 version: 1.0.1
 homepage: https://github.com/basemind-ai/sdk-dart
 repository: https://github.com/basemind-ai/sdk-dart
@@ -7,6 +7,8 @@ topics:
     - basemind
     - ai
     - grpc
+    - gpt4
+    - openai
 
 environment:
     sdk: '>=2.19.0 <4.0.0'

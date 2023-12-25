@@ -1,16 +1,26 @@
-# BaseMind.AI Dart SDK
-
 <div align="center">
+
+![Header with AI](https://github.com/basemind-ai/sdk-dart/assets/30323315/f74e21f9-9103-4518-9088-94497c6dba82)
 
 [![Discord](https://img.shields.io/discord/1153195687459160197)](https://discord.gg/ZSV2CQ86yg)
 
 </div>
+
+# BaseMind.AI Dart SDK
 
 The BaseMind.AI Dart SDK is a gRPC client library for connecting with the BaseMind.AI platform.
 
 ## Installation
 
 Add the dependency in your application's `pubspec.yaml`:
+
+With Flutter:
+
+```shell
+flutter pub add basemind
+```
+
+With Dart:
 
 ```shell
 dart pub add basemind

@@ -18,8 +18,9 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 21
-            - name: Setup Dart
-              uses: dart-lang/setup-dart@v1
+            - uses: subosito/flutter-action@v2
+              with:
+                  channel: 'stable'
             - name: Load Cached Dart Dependencies
               id: cached-dart-dependencies
               uses: actions/cache@v3
@@ -27,7 +28,7 @@ jobs:
                   path: ~/.dart_tool/
                   key: dart-3${{ hashFiles('pubspec.lock') }}
             - name: Install Dependencies
-              run: dart pub get
+              run: flutter pub get
             - name: Setup Python
               uses: actions/setup-python@v5
               with:
