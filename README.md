@@ -65,7 +65,7 @@ import 'package:basemind/client.dart';
 final client = BaseMindClient('<API_KEY>');
 
 handlePromptStream(String userInput) {
-  final stream = client.requestStream({'userInput': userInput});
+  final stream = client.requestStream({'userInput': userInput}, ca);
   stream.listen((response) {
     print(response.content);
   });

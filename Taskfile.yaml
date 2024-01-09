@@ -15,7 +15,7 @@ tasks:
         cmds:
             - brew update && brew upgrade
             - command -v flutter &> /dev/null && flutter upgrade
-            - dart pub upgrade
+            - flutter pub upgrade
             - pre-commit autoupdate
     lint:
         desc: Lint the project
