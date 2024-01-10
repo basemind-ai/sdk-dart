@@ -49,9 +49,10 @@ import 'package:basemind/client.dart';
 
 final client = BaseMindClient('<API_KEY>');
 
-Future<String> handlePromptRequest(String userInput) async {
-  final response = await client.requestPrompt({'userInput': userInput});
-  return response.content;
+Future<String> handlePromptRequest(Map<String, String> templateVariables) async {
+	final response = await client.requestPrompt(templateVariables);
+
+	return response.content;
 }
 ```
 
@@ -64,8 +65,8 @@ import 'package:basemind/client.dart';
 
 final client = BaseMindClient('<API_KEY>');
 
-handlePromptStream(String userInput) {
-  final stream = client.requestStream({'userInput': userInput}, ca);
+handlePromptStream(Map<String, String> templateVariables) {
+  final stream = client.requestStream(templateVariables);
   stream.listen((response) {
     print(response.content);
   });
@@ -79,11 +80,10 @@ import 'package:basemind/client.dart';
 
 final client = BaseMindClient('<API_KEY>');
 
-Future<List<String>> handlePromptStream(String userInput) async {
-  final stream = client.requestStream({'userInput': userInput});
+Future<List<String>> handlePromptStream(Map<String, String> templateVariables) async {
+  final stream = client.requestStream(templateVariables);
 
   var chunks = [];
-
   await for (var response in stream) {
     chunk.add(response.content);
   }
