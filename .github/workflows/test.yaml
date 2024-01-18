@@ -19,7 +19,7 @@ jobs:
                   channel: 'stable'
             - name: Load Cached Dart Dependencies
               id: cached-dart-dependencies
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   path: ~/.dart_tool/
                   key: flutter-${{ hashFiles('pubspec.lock') }}
