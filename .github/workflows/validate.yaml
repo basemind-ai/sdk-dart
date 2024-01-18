@@ -23,7 +23,7 @@ jobs:
                   channel: 'stable'
             - name: Load Cached Dart Dependencies
               id: cached-dart-dependencies
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   path: ~/.dart_tool/
                   key: dart-3${{ hashFiles('pubspec.lock') }}
@@ -39,7 +39,7 @@ jobs:
               run: python -m pip install pre-commit && pre-commit install
             - name: Load Cached Pre-Commit Dependencies
               id: cached-pre-commit-dependencies
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   path: ~/.cache/pre-commit/
                   key: pre-commit-4|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
